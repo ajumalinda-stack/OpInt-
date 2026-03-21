@@ -714,32 +714,37 @@ function qBack() {
 
 // ── GENERATE ──────────────────────────────────────────────────────────────
 async function generateReport() {
-  document.getElementById('tool-review').style.display='none';
-  document.getElementById('tool-loading').style.display='block';
+  document.getElementById('tool-review').style.display = 'none';
+  document.getElementById('tool-loading').style.display = 'block';
   document.getElementById('spin-ring').style.borderTopColor = activeMod.color;
 
-  const formatted = activeMod.qs.map((q,i)=>`Q: ${q}\nA: ${answers[i]||"(no answer)"}`).join("\n\n");
+  const formattedAnswers = activeMod.qs.map(
+    (q, i) => `Q: ${q}\nA: ${answers[i] || "(no answer)"}`
+  );
 
   try {
-    const res = await fetch("https://api.anthropic.com/v1/messages",{
-      method:"POST",
-      headers:{"Content-Type":"application/json"},
-      body:JSON.stringify({
-        model:"claude-sonnet-4-20250514",
-        max_tokens:1500,
-        system:SYSTEM,
-        messages:[{role:"user",content:`MODULE: ${activeMod.label}\n\nASSESSMENT RESPONSES:\n\n${formatted}\n\nGenerate the full intelligence report now.`}]
-      })
+    const res = await fetch("/api/claude", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        module: activeMod.label,
+        answers: formattedAnswers,
+      }),
     });
+
     const data = await res.json();
-    if (data.content?.[0]?.text) {
-      rawReport = data.content[0].text;
-      renderReport(rawReport);
-    } else throw new Error("no content");
-  } catch(e) {
-    document.getElementById('tool-loading').style.display='none';
-    document.getElementById('tool-review').style.display='block';
-    alert("Something went wrong. Please try again.");
+
+    if (!res.ok || !data.text) {
+      throw new Error(data.error || "No response from server.");
+    }
+
+    rawReport = data.text;
+    renderReport(rawReport);
+
+  } catch (e) {
+    document.getElementById('tool-loading').style.display = 'none';
+    document.getElementById('tool-review').style.display = 'block';
+    alert("Something went wrong: " + e.message);
   }
 }
 
