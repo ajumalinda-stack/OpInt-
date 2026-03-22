@@ -212,7 +212,6 @@ textarea::placeholder{color:var(--td)}
 .spin{width:70px;height:70px;border:2px solid transparent;border-top-color:var(--terra);border-right-color:var(--ochre);border-radius:50%;margin:0 auto 2.5rem;animation:spin 1.2s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
 .loading h3{font-family:'Bebas Neue',sans-serif;font-size:2rem;letter-spacing:.06em;color:var(--w);margin-bottom:.9rem}
-.loading h3{font-family:'Bebas Neue',sans-serif;font-size:2rem;letter-spacing:.06em;color:var(--w);margin-bottom:.9rem}
 .loading p{font-size:.68rem;color:var(--td);letter-spacing:.15em;font-style:italic}
 
 /* FOUNDER REPORT — MINI SKIRT */
@@ -466,7 +465,7 @@ textarea::placeholder{color:var(--td)}
 
   <section class="contact reveal">
     <div class="contact-pre">Pan-African · Available anywhere the engine room needs fixing</div>
-    <h2 class="contact-h">When they look<br>under the hood —<br>be ready.</h2>
+    <h2 class="contact-h">They will look<br>under the hood.<br>Be ready.</h2>
     <p class="contact-p">Six months before your next round is exactly the right time to have this conversation.</p>
     <a href="mailto:hello@opint.africa" class="contact-em">hello@opint.africa →</a>
   </section>
@@ -592,21 +591,11 @@ textarea::placeholder{color:var(--td)}
       <!-- THREE SIGNAL ZONES -->
       <div class="signal-zones" id="signal-zones"></div>
 
-      <!-- REDACTED INTELLIGENCE -->
-      <div class="redacted-block">
-        <div class="redacted-header">
-          Intelligence Brief
-          <span class="classified-tag">Full Report: Restricted</span>
-        </div>
-        <div id="redacted-rows"></div>
-      </div>
-
       <!-- CTA -->
       <div class="rpt-cta">
-        <div class="rpt-cta-label">Next Step</div>
-        <div class="rpt-cta-h">The full picture is already on its way.</div>
-        <p class="rpt-cta-p">The complete risk register, the 90-day operating brief, and the bottom line have been sent to your inbox. When you are ready to talk through what it means for your company, OpInt will already know exactly what needs fixing.</p>
-        <a href="mailto:hello@opint.africa" class="btn btn-terra" style="margin:0 auto">Book the debrief call →</a>
+        <div class="rpt-cta-h">Ready to talk through what this means?</div>
+        <p class="rpt-cta-p">A 60-minute conversation is all it takes to turn this score into a clear path forward.</p>
+        <a href="mailto:hello@opint.africa" class="btn btn-terra" style="margin:0 auto">Get in touch →</a>
         <div class="rpt-actions">
           <button class="btn btn-ghost" onclick="showToolHome()">← Run Another Assessment</button>
         </div>
@@ -791,7 +780,8 @@ function renderQ(){
   nb.textContent=i<m.qs.length-1?'Next →':'Review and Generate →';
   updateNextBtn();inp.focus();
 }
-  function updateNextBtn(){
+
+function updateNextBtn(){
   const btn=document.getElementById('q-next-btn'),val=(answers[currentQ]||'').trim();
   btn.style.opacity=val?'1':'0.35';btn.disabled=!val;
 }
@@ -956,4 +946,3 @@ document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
 </script>
 </body>
 </html>
-    
