@@ -622,14 +622,12 @@ const MODS = {
         "Can you tell me your exact burn multiple and cost to acquire a customer right now — without opening multiple apps?",
         "What is the one thing your team avoids telling you?",
         "Describe your last board or investor meeting. What were you not ready for?",
-        "What does your delegation look like in practice, not in theory?",
+        "What does your delegation look like in practice? Be honest, not theoretical.",
         "Where is information siloed in your organisation right now? Who knows what that others do not?",
-        "You are 6 months from your next round or a potential acquisition. What would an investor or bank find if they looked under the hood today?"]},
-  duediligence:{label:"VC Due Diligence",color:"#5068a0",
+        "You are 6 months from your next round or a potential acquisition. What would an investor or bank find if they looked under the hood today?"]},  duediligence:{label:"VC Due Diligence",color:"#5068a0",
     qs:["Describe this founder's decision-making style. Give a specific example from the past 90 days.",
         "Who on the team operates independently and who requires constant direction?",
-        "Can the founder tell you their exact burn multiple and unit economics without opening multiple tools?",
-        "How does the founder respond when given feedback they disagree with?",
+        "Can the founder tell you their exact burn multiple and unit economics without opening multiple tools?",        "How does the founder respond when given feedback they disagree with?",
         "Describe a crisis the company has faced. What was the founder's role in causing it, managing it, and learning from it?",
         "What does the founder NOT know about their own company right now?",
         "How does information flow between departments — sales, product, support, finance?",
@@ -641,12 +639,12 @@ const MODS = {
         "What has already been tried to fix it, and why did it not stick?",
         "Who in the organisation currently has the most informal power? Is that aligned with their formal role?",
         "Can the company clearly show its burn multiple, CAC, and unit economics to an investor today? If not, why not?",
-        "Where is information siloed? Who knows what that others do not — and what does that cost the company?",
+        "Where is information siloed? Who knows what that others do not and what does that cost the company?",
         "Describe the current meeting structure. What exists, how often, and who actually shows up prepared?",
         "What does accountability look like here? When someone misses a commitment, what actually happens?",
         "What does the founder need to stop doing personally in the next 90 days?",
         "What would a bank auditor or Series B investor want to see that you cannot currently show them?",
-        "What is the one thing that, if fixed, would make everything else easier?"]}
+        "What is the one thing that if fixed would make everything else easier?"]}
 };
 
 // System prompt for FOUNDER-FACING report (mini skirt)
@@ -719,7 +717,6 @@ Be specific. Reference what they said. This is a private brief. Linda can handle
 
 let activeMod=null, answers=[], currentQ=0;
 let intakeName='', intakeEmail='', intakeCompany='', intakeStage='';
-
 function showPage(p){
   document.getElementById('page-landing').classList.toggle('active',p==='landing');
   document.getElementById('page-tool').classList.toggle('active',p==='tool');
@@ -797,8 +794,7 @@ function qNext(){
   }
   window.scrollTo(0,0);
 }
-
-function qBack(){
+  function qBack(){
   if(currentQ>0){currentQ--;renderQ();}
   else{document.getElementById('tool-questions').style.display='none';document.getElementById('tool-intake').style.display='block';}
 }
@@ -917,21 +913,21 @@ function renderFounderReport(text){
 
 async function sendIntelligenceEmail(lindaReport, founderReport){
   const subject=`OpInt Intelligence Brief: ${intakeName} / ${intakeCompany} (${intakeStage})`;
-  const body=`NEW ASSESSMENT RECEIVED\n\nFounder: ${intakeName}\nEmail: ${intakeEmail}\nCompany: ${intakeCompany}\nStage: ${intakeStage}\nModule: ${activeMod.label}\nTime: ${new Date().toLocaleString()}\n\n${'='.repeat(60)}\nLINDA'S FULL INTELLIGENCE BRIEF\n${'='.repeat(60)}\n\n${lindaReport}\n\n${'='.repeat(60)}\nFOUNDER-FACING REPORT (what they saw)\n${'='.repeat(60)}\n\n${founderReport}\n\n${'='.repeat(60)}\nRAW ANSWERS\n${'='.repeat(60)}\n\n${activeMod.qs.map((q,i)=>`Q${i+1}: ${q}\nA: ${answers[i]||'(no answer)'}`).join('\n\n')}`;
+  const emailBody=`NEW ASSESSMENT RECEIVED\n\nFounder: ${intakeName}\nEmail: ${intakeEmail}\nCompany: ${intakeCompany}\nStage: ${intakeStage}\nModule: ${activeMod.label}\nTime: ${new Date().toLocaleString()}\n\n${'='.repeat(60)}\nLINDA'S FULL INTELLIGENCE BRIEF\n${'='.repeat(60)}\n\n${lindaReport}\n\n${'='.repeat(60)}\nFOUNDER-FACING REPORT (what they saw)\n${'='.repeat(60)}\n\n${founderReport}\n\n${'='.repeat(60)}\nRAW ANSWERS\n${'='.repeat(60)}\n\n${activeMod.qs.map((q,i)=>`Q${i+1}: ${q}\nA: ${answers[i]||'(no answer)'}`).join('\n\n')}`;
 
   try{
-    await fetch('/api/claude',{
+    const r = await fetch('/api/send-email',{
       method:'POST',
       headers:{'Content-Type':'application/json'},
       body:JSON.stringify({
-        action:'email',
-        to:'hello@opint.africa',
         subject,
-        body
+        body: emailBody
       })
     });
+    const d = await r.json();
+    console.log('Email result:', d);
   }catch(e){
-    console.log('Email send attempted');
+    console.log('Email error:', e.message);
   }
 }
 
