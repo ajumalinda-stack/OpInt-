@@ -454,7 +454,7 @@ textarea::placeholder{color:var(--td)}
       <div class="wp wp1"><div class="wp-ty">Primary Client</div><div class="wp-h">The Series A and Bridge Founder</div><p class="wp-p">You have product-market fit and funding. Your operations are held together by duct tape. You are 6 months from your Series B, or you just took a bridge and need to show resilience to survive 2026.</p><div class="sig">Every critical decision still routes through you personally</div><div class="sig">You cannot show your burn multiple without opening multiple apps</div><div class="sig">You know things are breaking but cannot name what exactly</div><div class="sig">You need the engine room built before anyone looks under the hood</div></div>
       <div class="wp wp2"><div class="wp-ty">Distribution Partner</div><div class="wp-h">The VC and Operating Partner</div><p class="wp-p">You have 10 to 50 portfolio companies across Africa. You cannot be in the engine room of all of them. You keep watching operational failures kill your best companies before they reach Series B.</p><div class="sig">Your portfolio needs more than capital and warm introductions</div><div class="sig">You need a specialist to send into the engine room</div><div class="sig">One OpInt engagement protects your entire fund investment</div><div class="sig">You want institutional-grade ops across your portfolio before their next rounds</div></div>
     </div>
-  </section>
+    </section>
 
   <div class="ss-band reveal">
     <div class="ss-lbl">From The Desk Of</div>
@@ -477,6 +477,7 @@ textarea::placeholder{color:var(--td)}
     <div class="foot-loc">Pan-African</div>
   </footer>
 </div>
+
 
 <!-- TOOL PAGE -->
 <div id="page-tool" class="page">
@@ -503,7 +504,8 @@ textarea::placeholder{color:var(--td)}
       </div>
     </div>
   </div>
-
+  
+  
   <!-- INTAKE FORM -->
   <div id="tool-intake" style="display:none">
     <div class="intake-wrap">
@@ -619,7 +621,7 @@ const MODS = {
         "Name three decisions that happened last week without you being involved.",
         "If you disappeared for two weeks, what would break first?",
         "How many direct reports do you have, and how often do they come to you with answers rather than problems?",
-        "Can you tell me your exact burn multiple and cost to acquire a customer right now — without opening multiple apps?",
+        "Can you tell me your exact burn multiple and cost to acquire a customer right now without opening multiple apps?",
         "What is the one thing your team avoids telling you?",
         "Describe your last board or investor meeting. What were you not ready for?",
         "What does your delegation look like in practice? Be honest, not theoretical.",
@@ -646,7 +648,7 @@ const MODS = {
         "What would a bank auditor or Series B investor want to see that you cannot currently show them?",
         "What is the one thing that if fixed would make everything else easier?"]}
 };
-
+  
 // System prompt for FOUNDER-FACING report (mini skirt)
 const SYSTEM_FOUNDER = `You are OpInt — Founder Operating Intelligence. Senior operator, 17 years across East and Central Africa, two C-suite roles simultaneously, 7 countries. You have seen every way a funded company quietly collapses.
 
@@ -717,6 +719,7 @@ Be specific. Reference what they said. This is a private brief. Linda can handle
 
 let activeMod=null, answers=[], currentQ=0;
 let intakeName='', intakeEmail='', intakeCompany='', intakeStage='';
+
 function showPage(p){
   document.getElementById('page-landing').classList.toggle('active',p==='landing');
   document.getElementById('page-tool').classList.toggle('active',p==='tool');
@@ -794,7 +797,8 @@ function qNext(){
   }
   window.scrollTo(0,0);
 }
-  function qBack(){
+
+function qBack(){
   if(currentQ>0){currentQ--;renderQ();}
   else{document.getElementById('tool-questions').style.display='none';document.getElementById('tool-intake').style.display='block';}
 }
@@ -879,32 +883,6 @@ function renderFounderReport(text){
         <div class="sz-label" style="color:${lc}">${z.level} Signal</div>
         <div class="sz-name">${z.name}</div>
         <div class="sz-reading">${z.reading}</div>
-      </div>`;
-  });
-
-  // Parse redacted rows
-  const redacted=[];
-  for(let i=1;i<=3;i++){
-    const title=text.match(new RegExp(`REDACTED_${i}_TITLE:\\s*(.+)`,'i'));
-    const sev=text.match(new RegExp(`REDACTED_${i}_SEVERITY:\\s*(\\d+)`,'i'));
-    const rt=text.match(new RegExp(`REDACTED_${i}_TEXT:\\s*(.+)`,'i'));
-    if(title&&sev&&rt){
-      redacted.push({title:title[1].trim(),severity:parseInt(sev[1]),text:rt[1].trim()});
-    }
-  }
-
-  const rdContainer=document.getElementById('redacted-rows');
-  rdContainer.innerHTML='';
-  redacted.forEach((r,idx)=>{
-    const sc=r.severity>75?'#c8673a':r.severity>50?'#d4982e':'#6a8a5a';
-    rdContainer.innerHTML+=`
-      <div class="redacted-row">
-        <div class="redact-num">0${idx+1}</div>
-        <div class="redact-content">
-          <div class="redact-title">${r.title}</div>
-          <div class="redact-bar"><div class="redact-bar-fill" style="width:${r.severity}%;background:${sc}40"></div></div>
-          <div class="redact-text">${r.text}</div>
-        </div>
       </div>`;
   });
 
